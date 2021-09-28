@@ -1,5 +1,7 @@
 # CoreGx News File
 
+## 1.4.2
+- Fixed missing default parameters in .distancePointLine (Issue #120)
 ## 1.4.1
 - Fixed some spelling errors and incorrect code chunk configurations in the 
 LongTable vignette
