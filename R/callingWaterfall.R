@@ -137,7 +137,7 @@ callingWaterfall <- function(x, type = c("IC50", "AUC", "AMAX"), intermediate.fo
         if (interfold == 0) {
             rang <- c(xx[oo][cutoff], xx[oo][cutoff])
         } else {
-            rang <- c(xx[oo][cutoff]/interfold, xx[oo][cutoff] * interfold)
+            rang <- c(xx[oo][cutoff] / interfold, xx[oo][cutoff] * interfold)
         }
     })
     
@@ -175,18 +175,37 @@ callingWaterfall <- function(x, type = c("IC50", "AUC", "AMAX"), intermediate.fo
         mypch <- rep(16, length(xx))
         names(mypch) <- names(xx)
         mypch[cutoffn] <- 19
-        plot(xx[oo], col = mycol[oo], pch = mypch[oo], ylab = ylabel, main = sprintf("%s\nWaterfall", name))
-        points(x = cutoff, y = xx[cutoffn], pch = mypch[cutoffn], col = mycol[cutoffn])
-        graphics::abline(a = rr$coefficients[1], b = rr$coefficients[2], lwd = 2, col = "darkgrey")
-        lines(x = c(cutoff, cutoff), y = c(par("usr")[3], xx[cutoffn]), col = "red")
-        lines(x = c(par("usr")[1], cutoff), y = c(xx[cutoffn], xx[cutoffn]), col = "red")
-        legend("topright", legend = c(sprintf("resistant (n=%i)", sum(!is.na(calls) & calls == "resistant")), sprintf("intermediate (n=%i)", 
-            sum(!is.na(calls) & calls == "intermediate")), sprintf("sensitive (n=%i)", sum(!is.na(calls) & calls == "sensitive")), "cutoff", 
-            sprintf("R=%.3g", cc$estimate)), col = c(rev(ccols), NA), pch = c(16, 16, 16, 19, NA), bty = "n")
-        
-        plot(ddi, pch = mypch[oo], col = mycol[oo], ylab = "Distance", main = sprintf("%s\n%s", name, "Distance from min--max line"))
-        points(x = cutoff, y = ddi[cutoffn], pch = mypch[cutoffn], col = mycol[cutoffn])
-        legend("topright", legend = c("resistant", "intermediate", "sensitive", "cutoff"), col = rev(ccols), pch = c(16, 16, 16, 19), bty = "n")
+        plot(xx[oo], col=mycol[oo], pch=mypch[oo], ylab=ylabel, 
+            main=sprintf("%s\nWaterfall", name))
+        points(x = cutoff, y = xx[cutoffn], pch = mypch[cutoffn], 
+            col = mycol[cutoffn])
+        graphics::abline(a = rr$coefficients[1], b = rr$coefficients[2], 
+            lwd = 2, col = "darkgrey")
+        lines(x = c(cutoff, cutoff), y = c(par("usr")[3], xx[cutoffn]), 
+            col = "red")
+        lines(x = c(par("usr")[1], cutoff), y = c(xx[cutoffn], xx[cutoffn]), 
+            col = "red")
+        legend("topright",
+            legend=c(
+                sprintf("resistant (n=%i)",
+                sum(!is.na(calls) & calls == "resistant")),
+                sprintf("intermediate (n=%i)",
+                sum(!is.na(calls) & calls == "intermediate")),
+                sprintf("sensitive (n=%i)",
+                sum(!is.na(calls) & calls == "sensitive")),
+                "cutoff",
+                sprintf("R=%.3g", cc$estimate)
+            ), 
+            col=c(rev(ccols), NA), 
+            pch=c(16, 16, 16, 19, NA), bty = "n")
+        plot(ddi, pch = mypch[oo], col = mycol[oo], 
+            ylab="Distance", 
+            main=sprintf("%s\n%s", name, "Distance from min--max line"))
+        points(x = cutoff, y = ddi[cutoffn], pch = mypch[cutoffn], 
+            col = mycol[cutoffn])
+        legend("topright", 
+            legend=c("resistant", "intermediate", "sensitive", "cutoff"), 
+            col = rev(ccols), pch = c(16, 16, 16, 19), bty = "n")
     }
     
     tt <- rep(NA, length(x))
@@ -212,27 +231,30 @@ callingWaterfall <- function(x, type = c("IC50", "AUC", "AMAX"), intermediate.fo
 #'
 #' @param x x-coordinate of point
 #' @param y y-coordinate of point
-#' @param a coefficient in line equation a * x + b * y + c = 0
-#' @param b coefficient in line equation a * x + b * y + c = 0
-#' @param c coefficient in line equation a * x + b * y + c = 0
-#' 
-#' @return \code{numeric} The shortest distance between a point and a line
+#' @param a `numeric(1)` The coefficient in line equation a * x + b * y + c = 0.
+#'   Defaults to 1.
+#' @param b `numeric(1)` The coefficient in line equation a * x + b * y + c = 0.
+#'   Defaults to 1.
+#' @param c `numeric(1)` The intercept in line equation a * x + b * y + c = 0.
+#'   Defaults to 0.
+#'
+#' @return `numeric` The shortest distance between a point and a line.
 #' 
 #' @export
 #' @keywords internal
-.distancePointLine <- function(x, y, a, b, c) {
-    
+.distancePointLine <- function(x, y, a=1, b=1, c=0) {
+
     if (!(all(is.finite(c(x, y, a, b, c))))) {
-        stop("All inputs to linePtDist must be real numbers.")
+        stop("All inputs to .distancePointLine must be real numbers.")
     }
-    
-    return(abs(a * x + b * y + c)/sqrt(a^2 + b^2))
+
+    return(abs(a * x + b * y + c) / sqrt(a^2 + b^2))
 }
 
 #' @export
 #' @keywords internal
 .magnitude <- function(p1, p2) {
-    return(sqrt(sum((p2 - p1)^2)))
+    return(sqrt(sum((p2 - p1) ^ 2)))
 }
 
 #' Calculate shortest distance between point and line segment
