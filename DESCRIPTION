@@ -1,7 +1,7 @@
 Package: CoreGx
 Type: Package
 Title: Classes and Functions to Serve as the Basis for Other 'Gx' Packages
-Version: 2.9.0
+Version: 2.10.0
 Date: 2024-03-11
 Authors@R: c(
     person(given="Jermiah", family="Joseph", email="jermiah.joseph@uhn.ca",
